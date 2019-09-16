@@ -1,6 +1,10 @@
 params.input = "s3://aws-batch-genomics-shared/secondary-analysis/example-files/fastq"
 params.reference = "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
 params.sample_id = "NIST7035"
+
+// this is used as the publishDir in a couple processes.
+// users need to specify a bucket that they have write access to for outputs
+// otherwise you will get Access Denied errors that will end up terminating the workflow
 params.output = "s3://pwyming-tmp-us-east-1/nextflow/results"
 
 // nextflow script is based on Groovy, so all language constructs therein
