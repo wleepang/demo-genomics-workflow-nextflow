@@ -1,6 +1,7 @@
 params.input = "s3://aws-batch-genomics-shared/secondary-analysis/example-files/fastq"
 params.reference = "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
 params.sample_id = "NIST7035"
+params.chromosomes = "chr21"
 
 // this is used as the publishDir in a couple processes.
 // users need to specify a bucket that they have write access to for outputs
@@ -29,6 +30,9 @@ ref_indices = Channel
 reads = Channel
   .fromPath("${params.input}/${sample_id}_*{1,2}*{fastq.gz}")
   .toList()
+
+
+chromosomes = Channel.fromList( params.chromosomes.tokenize(',') )
 
 log.info """
 script: ${workflow.scriptId}
@@ -114,19 +118,20 @@ process bcftools_mpileup {
     file "*" from ref_indices
     file "${sample_id}.bam" from bam_file
     file "${sample_id}.bai" from bai_file
-  
+    val chromosome from chromosomes
+
   output:
-    file "${sample_id}.mpileup.vcf.gz" into vcf_files
+    file "${sample_id}.${chromosome}.mpileup.gz" into vcf_files
   
   script:
   """
   bcftools mpileup \
         --threads 16 \
         -Oz \
-        -r chr21 \
+        -r ${chromosome} \
         -f ${ref_name} \
         ${sample_id}.bam \
-        > ${sample_id}.mpileup.vcf.gz
+        > ${sample_id}.${chromosome}.mpileup.gz
   """
 }
 
@@ -140,10 +145,11 @@ process bcftools_call {
     }
 
   input:
-    file "${sample_id}.mpileup.vcf.gz" from vcf_files
-  
+    val chromosome from chromosomes
+    file "${sample_id}.${chromosome}.mpileup.gz" from vcf_files
+
   output:
-    file "${sample_id}.vcf.gz"
+    file "${sample_id}.${chromosome}.vcf.gz"
   
   script:
   """
@@ -151,9 +157,9 @@ process bcftools_call {
         -m \
         --threads 16 \
         -Oz \
-        -t chr21 \
-        -o ${sample_id}.vcf.gz \
-        ${sample_id}.mpileup.vcf.gz
+        -t ${chromosome} \
+        -o ${sample_id}.${chromosome}.vcf.gz \
+        ${sample_id}.${chromosome}.mpileup.gz
   """
 }
 
