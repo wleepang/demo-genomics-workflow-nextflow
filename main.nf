@@ -33,6 +33,7 @@ reads = Channel
 
 
 chromosomes = Channel.fromList( params.chromosomes.tokenize(',') )
+chromosomes.into { chromosomes_mpileup; chromosomes_call }
 
 log.info """
 script: ${workflow.scriptId}
@@ -118,7 +119,7 @@ process bcftools_mpileup {
     file "*" from ref_indices
     file "${sample_id}.bam" from bam_file
     file "${sample_id}.bai" from bai_file
-    val chromosome from chromosomes
+    val chromosome from chromosomes_mpileup
 
   output:
     file "${sample_id}.${chromosome}.mpileup.gz" into vcf_files
@@ -145,7 +146,7 @@ process bcftools_call {
     }
 
   input:
-    val chromosome from chromosomes
+    val chromosome from chromosomes_call
     file "${sample_id}.${chromosome}.mpileup.gz" from vcf_files
 
   output:
