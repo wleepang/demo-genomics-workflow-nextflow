@@ -5,7 +5,7 @@ params.sample_id = "NIST7035"
 // this is used as the publishDir in a couple processes.
 // users need to specify a bucket that they have write access to for outputs
 // otherwise you will get Access Denied errors that will end up terminating the workflow
-params.output = "s3://pwyming-tmp-us-east-1/nextflow/results"
+params.output = "NONE"
 
 // nextflow script is based on Groovy, so all language constructs therein
 // can be used in workflow definitions.
@@ -64,7 +64,7 @@ process samtools_sort {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}"
+    publishDir "${output_dir}", enabled: (${params.output} != 'NONE')
 
   input:
     file "${sample_id}.sam" from sam_file
@@ -86,7 +86,7 @@ process samtools_index {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}"
+    publishDir "${output_dir}", enabled: (${params.output} != 'NONE')
 
   input:
     file "${sample_id}.bam" from bam_file
@@ -131,7 +131,7 @@ process bcftools_call {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}"
+    publishDir "${output_dir}", enabled: (${params.output} != 'NONE')
 
   input:
     file "${sample_id}.mpileup.vcf.gz" from vcf_files
