@@ -64,7 +64,9 @@ process samtools_sort {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}", enabled: params.output != 'NONE'
+    if (params.output != 'NONE') {
+      publishDir "${output_dir}", enabled: params.output != 'NONE'
+    }
 
   input:
     file "${sample_id}.sam" from sam_file
