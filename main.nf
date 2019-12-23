@@ -64,7 +64,7 @@ process samtools_sort {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}", enabled: (${params.output} != 'NONE')
+    publishDir "${output_dir}", enabled: params.output != 'NONE'
 
   input:
     file "${sample_id}.sam" from sam_file
@@ -86,7 +86,7 @@ process samtools_index {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}", enabled: (${params.output} != 'NONE')
+    publishDir "${output_dir}", enabled: params.output != 'NONE'
 
   input:
     file "${sample_id}.bam" from bam_file
@@ -131,7 +131,7 @@ process bcftools_call {
     cpus 8
     memory "32 GB"
 
-    publishDir "${output_dir}", enabled: (${params.output} != 'NONE')
+    publishDir "${output_dir}", enabled: params.output != 'NONE'
 
   input:
     file "${sample_id}.mpileup.vcf.gz" from vcf_files
