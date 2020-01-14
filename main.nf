@@ -93,7 +93,7 @@ process samtools_index {
     cpus 8
     memory "32 GB"
 
-    if (parames.output != 'NONE') {
+    if (params.output != 'NONE') {
       publishDir "${output_dir}", enabled: params.output != 'NONE'
     }
 
