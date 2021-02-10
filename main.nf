@@ -13,9 +13,9 @@ params.output = "NONE"
 // here is a mapping to define the specific container versions for the tools
 // in the pipeline.
 def containers = [
-  bwa: "biocontainers/bwa:v0.7.15_cv4",
-  samtools: "biocontainers/samtools:v1.7.0_cv4",
-  bcftools: "biocontainers/bcftools:v1.5_cv3"
+  bwa: "quay.io/biocontainers/bwa:0.7.15--1",
+  samtools: "quay.io/biocontainers/samtools:1.7--2",
+  bcftools: "quay.io/biocontainers/bcftools:1.5--3"
 ]
 
 sample_id = params.sample_id
