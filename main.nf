@@ -1,7 +1,8 @@
-params.input = "s3://aws-batch-genomics-shared/secondary-analysis/example-files/fastq"
+params.sample_id = "NA12878"
+params.input_prefix = "s3://1000genomes/pilot_data/data/NA12878/pilot3_unrecal"
+params.fastqs = "SRR014820_{1,2}.fastq.gz"
 params.reference = "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
-params.sample_id = "NIST7035"
-params.chromosomes = "chr21"
+params.chromosomes = "chr1,chr2"
 
 // this is used as the publishDir in a couple processes.
 // users need to specify a bucket that they have write access to for outputs
@@ -28,7 +29,7 @@ ref_indices = Channel
   .toList()
 
 reads = Channel
-  .fromPath("${params.input}/${sample_id}_*{1,2}*{fastq.gz}")
+  .fromPath("${params.input_prefix}/${params.fastqs}")
   .toList()
 
 
