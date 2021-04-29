@@ -57,7 +57,7 @@ process bwa_mem {
   
   script:
   """
-  bwa mem -t 16 -p \
+  bwa mem -t 16 \
         ${ref_name} \
         read*.fastq.gz \
         > ${sample_id}.sam
