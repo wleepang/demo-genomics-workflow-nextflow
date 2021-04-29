@@ -50,7 +50,7 @@ process bwa_mem {
 
   input:
     file '*' from ref_indices
-    file '*' from reads
+    file 'read*.fastq.gz' from reads
   
   output:
     file "${sample_id}.sam" into sam_file
@@ -59,7 +59,7 @@ process bwa_mem {
   """
   bwa mem -t 16 -p \
         ${ref_name} \
-        ${sample_id}_*1*.fastq.gz \
+        read*.fastq.gz \
         > ${sample_id}.sam
   """
 }
